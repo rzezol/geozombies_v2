@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Geozombies_v2</title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <!--<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl-dev.js"></script>
+        <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />-->
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet' />
+        <script src="https://kit.fontawesome.com/75568bef5c.js" crossorigin="anonymous"></script>
+        <script src="src\globals.js"></script>
+        <script src="src\helpers.js"></script>
+        <script src="src\scripts.js"></script>
+        <link href="style.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            createMap();
+            startLocatingPlayer();
+        </script>
+    </body>
+</html>
