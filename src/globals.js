@@ -1,4 +1,4 @@
-var _api_key = 'pk.eyJ1Ijoicnplem9sIiwiYSI6ImNrcGxvM2dhbDA3anIyd211dXQwOHVoNGYifQ.eycHF5doCaGZHzjjnheeIA';
+var _api_key = 'pk.eyJ1Ijoicnplem9sIiwiYSI6ImNsOGl4MWx4djBiYjQzb3BmNHJrMGR2cGYifQ.YLMwZ-TawBov1JB9jVkSXg';
 var _map = null;
 
 var _playerMarker = null;
