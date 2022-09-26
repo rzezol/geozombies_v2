@@ -149,7 +149,7 @@ function generateResources(position) {
     const marker = new mapboxgl.Marker(htmlMarker)
                 .setLngLat([dogRandomPlace._lng, dogRandomPlace._lat])
                 .setPopup(new mapboxgl.Popup({maxWidth: 'none', closeButton: false})
-                                      .setText(`Resource: <b>${_resourceType._dog}</b><br>Quantity: <b>${dogRandomQuantity}</b>`))
+                                      .setHTML(`Resource: <b>${_resourceType._dog}</b><br>Quantity: <b>${dogRandomQuantity}</b>`))
                 .addTo(_map);
     _resourcesArray.push({
         _marker: marker,
