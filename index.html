@@ -3,12 +3,14 @@
     <head>
         <meta charset="utf-8" />
         <title>Geozombies_v2</title>
-        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
         <!--<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl-dev.js"></script>
         <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />-->
         <script src='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js'></script>
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet' />
         <script src="https://kit.fontawesome.com/75568bef5c.js" crossorigin="anonymous"></script>
+        <script src="src\stdextent.js"></script>
         <script src="src\globals.js"></script>
         <script src="src\helpers.js"></script>
         <script src="src\scripts.js"></script>
@@ -16,9 +18,11 @@
     </head>
     <body>
         <div id="map"></div>
+        <div id="resources-panel" class="container"></div>
         <script>
             createMap();
             startLocatingPlayer();
         </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
     </body>
 </html>

@@ -3,8 +3,8 @@ var helpers = {
     createMarkerWithIcon: function(icon, color = 'rgba(0, 0, 0, 0)') {
 
         const el = document.createElement('div');
-            const width = 40;
-            const height = 40;
+            const width = 45;
+            const height = 45;
             el.className = 'marker';
             el.style.backgroundImage = icon;
             el.style.backgroundSize = '75%';

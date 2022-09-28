@@ -4,15 +4,30 @@ function createMap() {
 
     _map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/rzezol/cl8imbt0g002216pietmj8avd', //'mapbox://styles/rzezol/cl8e9izv8000114nvmvlu2kpu/draft',
+        style: 'mapbox://styles/rzezol/cl8imbt0g002216pietmj8avd',
         center: [19.42050920890234, 51.74833471053924],
-        projection: 'globe'
+        projection: 'globe',
+        doubleClickZoom: false
     });
 
-    _map.on('style.load', () => {
-        _map.setFog({}); // Set the default atmosphere style
-        });
+    //DEBUG
+            _map.on('click', (e) => {
+                var newPos = {
+                    coords: {
+                        longitude: e.lngLat.lng,
+                        latitude: e.lngLat.lat
+                    }
+                };
+                watchPositionSuccessCallback(newPos);
+            });
 
+    _map.once('moveend', () => {
+        createPlayer(_currentPosition);
+        createShelter(_currentPosition);
+        generateResources(_currentPosition);
+    });
+
+    updateUi();
 }
 
 function startLocatingPlayer() {
@@ -26,20 +41,28 @@ function startLocatingPlayer() {
 
 function watchPositionSuccessCallback(position) {
 
+    _currentPosition = position;
+
     if (_playerMarker === null) {
-        _map.flyTo({
-            center: [position.coords.longitude, position.coords.latitude],
-            zoom: 16,
-            essential: true
+
+        firstInit = true;       
+        _map.easeTo({
+            center: [_currentPosition.coords.longitude, _currentPosition.coords.latitude],
+            zoom: 16
         });
-        createPlayer(position);
-        createShelter(position);
-        generateResources(position);
+
+        return;
+
     }
 
-    if (position.coords.longitude !== _playerMarker.getLngLat().lng || position.coords.latitude !== _playerMarker.getLngLat().lat) {     
-        _playerMarker.setLngLat([position.coords.longitude, position.coords.latitude]);
+    if (_currentPosition.coords.longitude !== _playerMarker.getLngLat().lng ||
+        _currentPosition.coords.latitude !== _playerMarker.getLngLat().lat
+    ) {
+
+        _playerMarker.setLngLat([_currentPosition.coords.longitude, _currentPosition.coords.latitude]);
+        _map.easeTo({center: [_currentPosition.coords.longitude, _currentPosition.coords.latitude]});
         playerMovedCallback();
+
     }
 
 }
@@ -52,7 +75,54 @@ function watchPositionErrorCallback(err) {
 
 function playerMovedCallback() {
 
+    // map.queryRenderedFeatures - to chyba pozwala na wyciągnięcie tylko części znaczników bez iteracji przez wszystkie
+    //  użyte z aktualną lokalizacją i odpowiednim zakresem BB powinno zwrócić tylko potencjalne punkty interakcji pomijając resztę (?)
 
+    const maxDistance = 25.0; //meters
+    const currentLngLat = new mapboxgl.LngLat(_currentPosition.coords.longitude, _currentPosition.coords.latitude);
+
+    var closestResource = null;
+    //find closest resource within given range
+    for (var i=0; i<_resourcesArray.length; ++i) {
+
+        let resource = _resourcesArray[i];
+        let dist = resource._marker.getLngLat().distanceTo(currentLngLat);
+        if (dist > maxDistance)
+            continue;
+
+        if (closestResource === null) {
+            closestResource = {
+                _distance: dist,
+                _resource: resource,
+                _index: i
+            };
+        }
+
+        if (closestResource._distance > dist) {
+            closestResource = {
+                _distance: dist,
+                _resource: resource,
+                _index: i
+            };
+        }
+
+    };
+
+    if (closestResource !== null) {
+
+        _shelter.addResource(closestResource._resource);
+        closestResource._resource._marker.remove();
+        _resourcesArray.splice(closestResource._index, 1);
+        updateUi();
+
+    }
+
+}
+
+function updateUi() {
+    window.document.getElementById('resources-panel').innerHTML =
+        `People: <strong>${_shelter._population}</strong>  Dogs: <strong>${_shelter._dogs}</strong><br>
+        Food: <strong>${_shelter._food}</strong>  Wood: <strong>${_shelter._wood}</strong>  Metal: <strong>${_shelter._metal}</strong>`;
 }
 
 function createPlayer(position) {
@@ -103,7 +173,7 @@ function generateResources(position) {
 
             //losu losu...
             let resTypeRand = Math.random();
-            let resTypeEnum = resTypeRand < 0.33 ? _resourceType._wood : (resTypeRand < 0.66 ? _resourceType._metal : _resourceType._food);
+            let resTypeEnum = resTypeRand < 0.25 ? _resourceType._wood : (resTypeRand < 0.50 ? _resourceType._metal : (resTypeRand < 0.75 ? _resourceType._food : _resourceType._people));
             let drawnResIcon = null;
             let drawnResDesc = resTypeEnum;
             let drawnResQuantity = helpers.randomNumberBetween(5, 16);
@@ -116,6 +186,10 @@ function generateResources(position) {
                     break;
                 case _resourceType._food:
                     drawnResIcon = _icons._food;
+                    break;
+                case _resourceType._people:
+                    drawnResIcon = _icons._people;
+                    break;
             };
             
             let randomPlace = pickRandomPlace(startRad, endRad);
