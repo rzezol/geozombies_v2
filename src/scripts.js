@@ -10,17 +10,6 @@ function createMap() {
         doubleClickZoom: false
     });
 
-    //DEBUG
-            _map.on('click', (e) => {
-                var newPos = {
-                    coords: {
-                        longitude: e.lngLat.lng,
-                        latitude: e.lngLat.lat
-                    }
-                };
-                watchPositionSuccessCallback(newPos);
-            });
-
     _map.once('moveend', () => {
         createPlayer(_currentPosition);
         createShelter(_currentPosition);
